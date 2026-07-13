@@ -139,8 +139,6 @@ sub(r"Spent to date \$[\d,]+", f"Spent to date ${spent_mtd:,}", "legend spent")
 sub(r"Available ~\$[\d,]+", f"Available ~${available:,}", "legend available")
 sub(r'<div class="n">\$[\d,]+</div><div class="l">spent in \w+ \(to date\)</div>',
     f'<div class="n">${spent_mtd:,}</div><div class="l">spent in {month_name} (to date)</div>', "kpi spent")
-sub(r"Tracking to ~\$[\d.]+K of a \$10K monthly budget, so ~\$[\d.]+K headroom",
-    f"Tracking to ~${projected/1000:.0f}K of a $10K monthly budget, so ~${available/1000:.0f}K headroom", "budget note")
 sub(r"Recent months:.*?<span class=\"sub\">all-time",
     f'Recent months: {recent} · <span class="sub">all-time', "recent months", flags=re.S)
 sub(r"all-time creator spend \$[\d.]+K across \d+ posts",
