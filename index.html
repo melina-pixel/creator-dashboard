@@ -96,7 +96,6 @@
       <a data-target="pipeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Pipeline</a>
       <a data-target="forecast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><polyline points="7 14 11 10 14 13 20 6"/></svg>Forecast</a>
       <a data-target="highlights"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>Recent work</a>
-      <a data-target="discussion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Discussion</a>
     </nav>
     <div style="margin-top:22px;padding:0 11px;font-size:11px;color:var(--muted)">Built by Melina Giorgalletou</div>
   </aside>
@@ -252,19 +251,6 @@
         </div>
       </section>
 
-      <section id="discussion" class="tab-panel">
-        <h2>Discussion</h2>
-        <div class="card">
-          <div id="cmtList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
-          <div style="display:flex;flex-direction:column;gap:8px;max-width:640px">
-            <input id="cmtName" placeholder="Your name" style="padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit">
-            <textarea id="cmtText" placeholder="Leave a comment or question…" rows="3" style="padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit;resize:vertical"></textarea>
-            <button id="cmtPost" class="wkbtn" style="align-self:flex-start;background:var(--accent);color:#fff;border-color:var(--accent)">Post comment</button>
-            <div id="cmtMsg" class="note"></div>
-          </div>
-        </div>
-      </section>
-
       <footer>
         Sources: Marketing Tracker (LIP and Long-Term Partnerships), Gmail invoices, Melina/Sarah 1:1 (13 Jul). Spend is actual, monthly budget and committed are planned or estimated, edit as needed.
       </footer>
@@ -371,32 +357,6 @@
   document.getElementById("rwPrev").onclick=()=>{ if(ri<TOPWEEKS.length-1){ri++;renderRW();} };
   document.getElementById("rwNext").onclick=()=>{ if(ri>0){ri--;renderRW();} };
   renderRW();
-
-  // ---- Discussion (on-page comments) ----
-  function esc(s){return (s||"").replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));}
-  async function loadComments(){
-    const list=document.getElementById("cmtList");
-    try{
-      const r=await fetch("/api/comments"); const j=await r.json();
-      const c=j.comments||[];
-      if(!c.length){ list.innerHTML='<div class="note">No comments yet — start the discussion below.</div>'; return; }
-      list.innerHTML=c.slice().reverse().map(x=>
-        `<div style="border:1px solid var(--line);border-radius:10px;padding:10px 12px"><div style="font-weight:700;font-size:13px">${esc(x.name)} <span class="sub" style="font-weight:400">· ${new Date(x.ts).toLocaleString()}</span></div><div style="font-size:13.5px;margin-top:3px;white-space:pre-wrap">${esc(x.text)}</div></div>`).join("");
-    }catch(e){ list.innerHTML='<div class="note">Comments are still warming up — try again in a moment.</div>'; }
-  }
-  const cp=document.getElementById("cmtPost");
-  if(cp) cp.onclick=async()=>{
-    const name=document.getElementById("cmtName").value.trim(), text=document.getElementById("cmtText").value.trim();
-    const msg=document.getElementById("cmtMsg");
-    if(!name||!text){ msg.textContent="Add your name and a comment."; return; }
-    msg.textContent="Posting…";
-    try{
-      const r=await fetch("/api/comments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text})});
-      if(!r.ok) throw 0;
-      document.getElementById("cmtText").value=""; msg.textContent="Posted ✓"; loadComments();
-    }catch(e){ msg.textContent="Could not post — try again."; }
-  };
-  loadComments();
 </script>
 </body>
 </html>
