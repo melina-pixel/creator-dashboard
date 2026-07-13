@@ -197,7 +197,18 @@ html, na = re.subn(r'(<tbody id="activeRows">).*?(</tbody>)', lambda m: m.group(
 html, nw = re.subn(r'(<tbody id="wrappedRows">).*?(</tbody>)', lambda m: m.group(1) + wrapped_html + m.group(2), html, count=1, flags=re.S)
 if not na: print("  WARN no match: activeRows")
 if not nw: print("  WARN no match: wrappedRows")
-print(f"  active collabs: {len(active)} | wrapped: {len(wrapped)}")
+# active summary bar (budget-line style)
+def cnt(hs): return sum(1 for r in active if r["health"] in hs)
+gv = cnt(["Healthy", "Volume engine", "Complete"]); bv = cnt(["New"]); av = cnt(["At risk", "Parked"])
+n = len(active); totn = max(n, 1); p = lambda x: round(x / totn * 100)
+acsum = (f'<div class="budget-top"><div><span class="big">{n}</span> <span class="sub">active collaborations</span></div></div>'
+         f'<div class="bar"><div style="width:{p(gv)}%;background:var(--green)"></div><div style="width:{p(bv)}%;background:var(--blue)"></div><div style="width:{p(av)}%;background:var(--amber)"></div></div>'
+         f'<div class="legend"><span><i class="dot" style="background:var(--green)"></i> {gv} live</span>'
+         f'<span><i class="dot" style="background:var(--blue)"></i> {bv} pilots</span>'
+         f'<span><i class="dot" style="background:var(--amber)"></i> {av} awaiting / at risk</span></div>')
+html, nac = re.subn(r'<!--ACSUMMARY_START-->.*?<!--ACSUMMARY_END-->', lambda m: '<!--ACSUMMARY_START-->' + acsum + '<!--ACSUMMARY_END-->', html, count=1, flags=re.S)
+if not nac: print("  WARN no match: activeSummary")
+print(f"  active collabs: {len(active)} ({gv} live / {bv} pilots / {av} at risk) | wrapped: {len(wrapped)}")
 
 open(INDEX, "w", encoding="utf-8").write(html)
 print(f"Rebuilt: week {WEEKS[0]['lo']}-{WEEKS[0]['hi']}, {month_name} spend ${spent_mtd:,}/{MONTHLY_BUDGET}, "
