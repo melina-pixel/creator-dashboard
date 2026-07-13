@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creator Program Dashboard</title>
+<style>
+  :root{
+    --bg:#f5f6f9; --card:#fff; --ink:#101322; --muted:#6b7280; --line:#e7e9ee;
+    --accent:#4f46e5; --accent-soft:#e8e7fb;
+    --green:#16a34a; --greenb:#dcfce7; --amber:#d97706; --amberb:#fef3c7;
+    --blue:#2563eb; --blueb:#dbeafe; --gray:#9ca3af; --grayb:#f1f2f4; --red:#dc2626; --redb:#fee2e2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .app{display:flex;min-height:100vh}
+  /* sidebar */
+  .side{width:238px;flex-shrink:0;background:linear-gradient(180deg,#161a35,#0d0f20);color:#cdd2e0;padding:22px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+  .brand{font-size:19px;font-weight:800;color:#fff;padding:2px 10px;letter-spacing:-.01em;line-height:1.2}
+  .brand small{display:block;font-size:11px;font-weight:500;color:#868ea6;margin-top:3px}
+  .snav{margin-top:20px;display:flex;flex-direction:column;gap:3px}
+  .snav a{display:flex;align-items:center;gap:11px;font-size:13.5px;font-weight:600;color:#c2c8d8;padding:9px 11px;border-radius:9px;cursor:pointer}
+  .snav a svg{width:18px;height:18px;flex-shrink:0;opacity:.8}
+  .snav a:hover{background:rgba(255,255,255,.07);text-decoration:none;color:#fff}
+  .snav a.active{background:var(--accent);color:#fff}
+  .snav a.active svg{opacity:1}
+  /* main */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{background:var(--card);border-bottom:1px solid var(--line);padding:15px 30px;display:flex;justify-content:space-between;align-items:center;gap:16px;position:sticky;top:0;z-index:10}
+  .topbar h1{margin:0;font-size:17px;font-weight:800;letter-spacing:-.01em}
+  .topbar .meta{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--muted)}
+  .topbar .meta a{font-weight:600}
+  .content{padding:26px 30px 44px;width:100%;max-width:1120px}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+  h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--ink);margin:0 0 16px;display:flex;align-items:center;gap:10px}
+  h2 .shlink{margin-left:auto;font-size:12px;font-weight:600;letter-spacing:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+  .budget-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:baseline}
+  .budget-top .big{font-size:32px;font-weight:800;letter-spacing:-.02em}
+  .bar{height:28px;border-radius:8px;background:var(--grayb);overflow:hidden;display:flex;margin:14px 0 6px}
+  .bar .spent{background:var(--accent)}
+  .bar .committed{background:repeating-linear-gradient(45deg,#a5a3f0,#a5a3f0 6px,#b8b6f4 6px,#b8b6f4 12px)}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 16px}
+  .kpi .n{font-size:23px;font-weight:800;letter-spacing:-.01em}
+  .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  .pill{display:inline-block;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .p-green{background:var(--greenb);color:var(--green)} .p-amber{background:var(--amberb);color:var(--amber)}
+  .p-blue{background:var(--blueb);color:var(--blue)} .p-gray{background:var(--grayb);color:#4b5563} .p-red{background:var(--redb);color:var(--red)}
+  .sub{color:var(--muted);font-size:12px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  ul.tight{margin:6px 0 0;padding-left:18px} ul.tight li{margin:4px 0;font-size:13.5px}
+  .note{font-size:12px;color:var(--muted);margin-top:2px}
+  footer{color:var(--muted);font-size:12px;padding:8px 0 0}
+  .tag{font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:6px}
+  .wkbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .wklabel{font-weight:700;font-size:15px}
+  .wkbtn{font:inherit;font-size:13px;font-weight:600;color:var(--ink);background:var(--grayb);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer}
+  .wkbtn:hover{background:#e9eaee}
+  .wkbtn:disabled{opacity:.4;cursor:not-allowed}
+  .rwgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .rwcard{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+  .rwembed{width:100%;height:540px;border:0;display:block;background:#000}
+  .rwmeta{padding:10px 12px;font-size:12.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .rwmeta .v{font-weight:800}
+  .rwbadge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);text-transform:uppercase;letter-spacing:.03em}
+  @media(max-width:760px){
+    .app{flex-direction:column}
+    .side{width:auto;height:auto;position:static}
+    .snav{flex-direction:row;flex-wrap:wrap;margin-top:12px}
+    .content{padding:20px}
+    .cols{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">Creator Program<small>Pipeline and budget</small></div>
+    <nav class="snav">
+      <a data-target="budget"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Budget</a>
+      <a data-target="snapshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Weekly snapshot</a>
+      <a data-target="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Active collabs</a>
+      <a data-target="invoices"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>Invoices</a>
+      <a data-target="pipeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Pipeline</a>
+      <a data-target="forecast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><polyline points="7 14 11 10 14 13 20 6"/></svg>Forecast</a>
+      <a data-target="highlights"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>Recent work</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="topTitle">Budget</h1>
+      <div class="meta">
+        <a href="https://docs.google.com/spreadsheets/d/1Ix2-m-8Jrvv6TWeyLBJQ5IHvp6dEXVW_h_5JpT8kPLA/edit#gid=700414383" target="_blank">Open in Google Sheets ↗</a>
+        <span>as of 13 Jul 2026</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section id="budget" class="tab-panel">
+        <h2>Monthly budget, July 2026<a class="shlink" href="https://docs.google.com/spreadsheets/d/1Ix2-m-8Jrvv6TWeyLBJQ5IHvp6dEXVW_h_5JpT8kPLA/edit#gid=0" target="_blank">↗ Budgets tab</a></h2>
+        <div class="card">
+          <div class="budget-top">
+            <div><span class="big">$7.0K</span> <span class="sub">projected spend</span></div>
+            <div style="text-align:right"><span class="big">$25K</span> <span class="sub">monthly budget</span></div>
+          </div>
+          <div class="bar" title="Spent and committed vs budget">
+            <div class="spent" style="width:10%"></div>
+            <div class="committed" style="width:18%"></div>
+          </div>
+          <div class="legend">
+            <span><i class="dot" style="background:var(--accent)"></i> Spent to date $2,496</span>
+            <span><i class="dot" style="background:#a5a3f0"></i> Committed, active (est.) ~$4,500</span>
+            <span><i class="dot" style="background:var(--grayb)"></i> Available $18,000</span>
+          </div>
+          <p class="note">⚠️ <strong>Sourcing gap:</strong> tracking to ~$7K vs a $25K budget. ~$18K headroom, room to land Wave&nbsp;1 mid/macro creators (Sarah's Q3 priority). Recent months: May $20.3K · June $10.5K · <span class="sub">all-time creator spend $125.8K across 875 posts.</span></p>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="n">3 live</div><div class="l">and 2 awaiting final video · 2 pilots</div></div>
+          <div class="kpi"><div class="n">$2,496</div><div class="l">spent in July (to date)</div></div>
+          <div class="kpi"><div class="n">119</div><div class="l">creators in pipeline</div></div>
+          <div class="kpi"><div class="n">11</div><div class="l">invoices last 60 days</div></div>
+        </div>
+      </section>
+
+      <section id="snapshot" class="tab-panel">
+        <h2>Weekly snapshot</h2>
+        <div class="card">
+          <div class="wkbar">
+            <button id="wkPrev" class="wkbtn">◀ Older</button>
+            <div id="wkLabel" class="wklabel"></div>
+            <button id="wkNext" class="wkbtn">Newer ▶</button>
+          </div>
+          <div class="kpis" id="wkKpis" style="margin:14px 0"></div>
+          <div id="wkContext"></div>
+        </div>
+      </section>
+
+      <section id="active" class="tab-panel">
+        <h2>Active collaborations<a class="shlink" href="https://docs.google.com/spreadsheets/d/1Ix2-m-8Jrvv6TWeyLBJQ5IHvp6dEXVW_h_5JpT8kPLA/edit#gid=700414383" target="_blank">↗ Partnerships tab</a></h2>
+        <div class="card" style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Creator</th><th>Type</th><th>Stage</th><th>Cost</th><th>Health</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Nomad Agency</strong> (AI Girl Society)<br><a href="https://www.instagram.com/aigirlssociety" target="_blank">@aigirlssociety</a></td><td>Retainer</td><td><span class="pill p-green">● Live · posts weekly</span><div class="sub">World Cup and AI carousels, weekly syncs</div></td><td>~$60/post <span class="sub">(phase 2)</span></td><td><span class="pill p-green">Healthy</span></td></tr>
+              <tr><td><strong>Moe</strong><br><a href="https://www.tiktok.com/@mdafalla.ugc" target="_blank">@mdafalla.ugc</a></td><td>Outreach retainer</td><td><span class="pill p-amber">◐ In submission · Round 3</span><div class="sub">3-video pkg and perf. bonuses</div></td><td>$300/video <span class="sub">($900 pkg)</span></td><td><span class="pill p-green">Healthy</span></td></tr>
+              <tr><td><strong>Posted CPM cohort</strong><br><span class="sub">~20+ UGC creators/wk</span></td><td>Posted (volume)</td><td><span class="pill p-green">● Live · daily posts</span><div class="sub">agency work-life and World Cup concepts</div></td><td>$20 flat and CPM</td><td><span class="pill p-blue">Volume engine</span></td></tr>
+              <tr><td><strong>Kayla Malss</strong><br><span class="sub">via Allies Management</span></td><td>Pilot</td><td><span class="pill p-blue">◔ Negotiating rates</span></td><td>TBD</td><td><span class="pill p-gray">New</span></td></tr>
+              <tr><td><strong>Kyan Salera</strong><br><a href="https://www.tiktok.com/@kyman.ai" target="_blank">@kyman.ai</a></td><td>Pilot (3-video)</td><td><span class="pill p-blue">◔ Onboarding</span></td><td>TBD</td><td><span class="pill p-gray">New</span></td></tr>
+              <tr><td><strong>Marcus Ng</strong></td><td>Outreach retainer</td><td><span class="pill p-amber">◐ Awaiting final video</span></td><td>$3,000/video</td><td><span class="pill p-amber">At risk</span></td></tr>
+              <tr><td><strong>Kayvon Jafarzadeh</strong></td><td>Outreach · ended early</td><td><span class="pill p-red">◐ Final video overdue</span><div class="sub">~1 mo late · chased 13 Jul</div></td><td>$2,700/video</td><td><span class="pill p-red">At risk</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="sub" style="margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:11px">Recently wrapped, not active</div>
+          <table>
+            <tbody>
+              <tr><td><strong>Amelia</strong> <a href="https://www.tiktok.com/@abetia" target="_blank">@abetia</a></td><td>Posted 10-video</td><td><span class="pill p-green">✓ Delivered</span></td><td>$100/post</td></tr>
+              <tr><td><strong>Maverick Maltin</strong> <a href="https://www.tiktok.com/@maverickgpt" target="_blank">@maverickgpt</a></td><td>Outreach (Q2)</td><td><span class="pill p-gray">Past partner · dormant</span></td><td>$1,250/post</td></tr>
+              <tr><td><strong>Melanie</strong> <a href="https://www.tiktok.com/@imelaniiie._" target="_blank">@imelaniiie._</a></td><td>Posted</td><td><span class="pill p-red">✕ Churned</span> <span class="sub">now posting other tools</span></td><td>n/a</td></tr>
+              <tr><td><strong>Lalita</strong> <a href="https://www.tiktok.com/@usernameislalita" target="_blank">@usernameislalita</a></td><td>Posted</td><td><span class="pill p-red">✕ Churned</span></td><td>n/a</td></tr>
+              <tr><td><strong>Corporate Bro</strong> (Ross)</td><td>Prospect</td><td><span class="pill p-amber">⏸ Parked</span> <span class="sub">$20K/video too high vs fit</span></td><td>$20K quote</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="invoices" class="tab-panel">
+        <h2>Invoices, last 60 days</h2>
+        <div class="card" style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Creator</th><th>Invoice #</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Moe Dafalla</td><td>SN-2026-R3-01</td><td>7 Jul</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>Moe Dafalla</td><td>SN-2026-R2-02</td><td>6 Jul</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>Amelia Spinnato</td><td>0002</td><td>6 Jul</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>Align and Co <span class="sub">(Kayla)</span></td><td>INV-9652433</td><td>8 Jul</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>Klarisse Purugganan</td><td>0032</td><td>29 Jun</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>Moe Dafalla</td><td>SN-2026-R2-01</td><td>22 Jun</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>Melanie Castillo</td><td>INV-004</td><td>23 Jun</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>Moe Dafalla</td><td>SN-2026-02</td><td>11 Jun</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>James Pelton</td><td>K2MSEVVZ-0001</td><td>3 Jun</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>CJ Johnson</td><td>INV-32</td><td>25 May</td><td><span class="pill p-green">Paid</span></td></tr>
+              <tr><td>Amelia Spinnato</td><td>0001</td><td>19 May</td><td><span class="pill p-green">Paid</span></td></tr>
+            </tbody>
+          </table>
+          <p class="note">All creator invoices in this window are paid. Amounts live in PayPal, Stripe and Wise, cross-referenced to LIP costs.</p>
+        </div>
+      </section>
+
+      <section id="pipeline" class="tab-panel">
+        <h2>Pipeline, 119 prospects<a class="shlink" href="https://docs.google.com/spreadsheets/d/1Ix2-m-8Jrvv6TWeyLBJQ5IHvp6dEXVW_h_5JpT8kPLA/edit#gid=1672484169" target="_blank">↗ Later List tab</a></h2>
+        <div class="kpis" style="margin-bottom:16px">
+          <div class="kpi"><div class="n">55</div><div class="l">Wave 1 · mid/macro conversion focus</div></div>
+          <div class="kpi"><div class="n">47</div><div class="l">Wave 2 · secondary</div></div>
+          <div class="kpi"><div class="n">16</div><div class="l">Wave 3 · macro reach</div></div>
+          <div class="kpi"><div class="n">1</div><div class="l">backlog (no wave)</div></div>
+        </div>
+        <div class="card">
+          <strong>In motion right now</strong>
+          <ul class="tight">
+            <li><span class="pill p-blue">Negotiating</span> &nbsp;Kayla Malss (Allies Mgmt)</li>
+            <li><span class="pill p-blue">Pilot</span> &nbsp;Kyan Salera, <a href="https://www.tiktok.com/@kyman.ai" target="_blank">@kyman.ai</a></li>
+            <li><span class="pill p-amber">Parked</span> &nbsp;Corporate Bro, price/fit review</li>
+            <li><span class="pill p-gray">Logged</span> &nbsp;Joshua LaRosa, <a href="https://www.instagram.com/joshualarosa.ai" target="_blank">@joshualarosa.ai</a> (via Xavier Guida, warm)</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="forecast" class="tab-panel">
+        <h2>3-month forecast (Jul to Sep)</h2>
+        <div class="cols">
+          <div class="card">
+            <strong>Retainers on deck</strong>
+            <ul class="tight">
+              <li>Nomad Agency: continuing weekly (World Cup to post-tournament angles)</li>
+              <li>Moe: Round 3 in flight, renew after</li>
+              <li>Posted CPM cohort: rolling daily posts</li>
+            </ul>
+            <strong style="display:block;margin-top:12px">Health and renewals</strong>
+            <ul class="tight">
+              <li><span class="pill p-green">Healthy</span> Nomad, Moe</li>
+              <li><span class="pill p-gray">Re-engage?</span> Maverick (past partner)</li>
+              <li><span class="pill p-red">Churned</span> Melanie, Lalita, now other tools</li>
+            </ul>
+          </div>
+          <div class="card">
+            <strong>Sourcing gap</strong>
+            <p style="margin:6px 0 0">Spending ~$7K/mo against a $25K budget. The lever: convert <strong>Wave 1</strong> mid/macro into live agreements to close the ~$18K/mo gap and show early conversions for Colin's buy-in.</p>
+            <strong style="display:block;margin-top:12px">Cultural tentpoles to ride</strong>
+            <ul class="tight">
+              <li>Back-to-school (Sept): "time to lock in" productivity setups</li>
+              <li>The Odyssey (Matt Damon): meme and lip-sync derivatives</li>
+              <li>Spider-Man release: quick tie-ins</li>
+              <li>Post World Cup angles while relevant</li>
+              <li class="sub">🚫 avoid political content (US midterms, Nov)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="highlights" class="tab-panel">
+        <h2>Recent work, top performers</h2>
+        <div class="card">
+          <div class="wkbar">
+            <button id="rwPrev" class="wkbtn">◀ Older</button>
+            <div id="rwLabel" class="wklabel"></div>
+            <button id="rwNext" class="wkbtn">Newer ▶</button>
+          </div>
+          <div id="rwGrid" class="rwgrid" style="margin-top:14px"></div>
+        </div>
+      </section>
+
+      <footer>
+        Sources: Marketing Tracker (LIP and Long-Term Partnerships), Gmail invoices, Melina/Sarah 1:1 (13 Jul). Spend is actual, monthly budget and committed are planned or estimated, edit as needed.
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+  const TITLES={budget:"Budget",snapshot:"Weekly snapshot",active:"Active collabs",invoices:"Invoices",pipeline:"Pipeline",forecast:"Forecast",highlights:"Recent work"};
+  const tabs=[...document.querySelectorAll('.snav a')];
+  const panels=[...document.querySelectorAll('.tab-panel')];
+  function showTab(id){
+    panels.forEach(p=>p.classList.toggle('active',p.id===id));
+    tabs.forEach(t=>t.classList.toggle('active',t.dataset.target===id));
+    document.getElementById('topTitle').textContent=TITLES[id]||"";
+    window.scrollTo({top:0});
+  }
+  tabs.forEach(t=>t.addEventListener('click',e=>{e.preventDefault();showTab(t.dataset.target);}));
+  showTab('budget');
+
+  const WEEKS=[
+    {"lo": "6 Jul", "hi": "12 Jul", "posts": 28, "spend": 974, "top": "@shotsbyjastin.raw", "topv": 3382, "posted": 23, "outreach": 5, "later": 0},
+    {"lo": "29 Jun", "hi": "5 Jul", "posts": 59, "spend": 2057, "top": "@ricthelisouza", "topv": 7469, "posted": 47, "outreach": 5, "later": 7},
+    {"lo": "22 Jun", "hi": "28 Jun", "posts": 40, "spend": 1574, "top": "@abetia", "topv": 5528, "posted": 32, "outreach": 5, "later": 3},
+    {"lo": "15 Jun", "hi": "21 Jun", "posts": 37, "spend": 1854, "top": "@etukaugc", "topv": 18300, "posted": 26, "outreach": 10, "later": 1},
+    {"lo": "8 Jun", "hi": "14 Jun", "posts": 36, "spend": 5386, "top": "Maverick Maltin", "topv": 342361, "posted": 27, "outreach": 9, "later": 0},
+    {"lo": "1 Jun", "hi": "7 Jun", "posts": 26, "spend": 1137, "top": "@xx_kashurr", "topv": 14600, "posted": 20, "outreach": 6, "later": 0},
+    {"lo": "25 May", "hi": "31 May", "posts": 46, "spend": 1956, "top": "@yourmarketingirlie", "topv": 2484, "posted": 36, "outreach": 10, "later": 0},
+    {"lo": "18 May", "hi": "24 May", "posts": 66, "spend": 3252, "top": "The Social Agency", "topv": 170800, "posted": 54, "outreach": 12, "later": 0}
+  ];
+  const CURRENT_CONTEXT=`
+    <div class="cols">
+      <div>
+        <strong>Where things stand</strong>
+        <ul class="tight">
+          <li>Nomad <span class="pill p-green">live</span>, Moe <span class="pill p-amber">Round 3 in submission</span>, Posted cohort <span class="pill p-green">live</span></li>
+          <li>Mid-month lull (19 vs 60 posts), next Posted drop reloading</li>
+          <li>July spend $2,496 of $25K budget, well under, gap still open</li>
+        </ul>
+      </div>
+      <div>
+        <strong>Pipeline moves this week</strong>
+        <ul class="tight">
+          <li>Kayla Malss: negotiating rates</li>
+          <li>Kyan: pilot onboarding</li>
+          <li>Joshua LaRosa added (via Xavier Guida)</li>
+          <li>Corporate Bro: parked ($20K quote)</li>
+          <li>Chased Kayvon: final video ~1 mo overdue</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note"><strong>Next week:</strong> push Wave 1 mid/macro conversions to close the budget gap · Nomad World Cup to post-tournament angles · start back-to-school concepts.</p>`;
+  let wi=0;
+  function delta(cur,prev,money){
+    if(prev==null) return "";
+    const d=cur-prev; if(d===0) return "";
+    const up=d>0, col=up?"var(--green)":"var(--red)", ar=up?"▲":"▼";
+    const val=money?("$"+Math.abs(d).toLocaleString()):Math.abs(d);
+    return ` <span style="color:${col}">${ar} ${val} wow</span>`;
+  }
+  function renderWeek(){
+    const w=WEEKS[wi], p=WEEKS[wi+1]||null;
+    document.getElementById("wkLabel").textContent="week of "+w.lo+" to "+w.hi+" 2026";
+    document.getElementById("wkKpis").innerHTML=
+      `<div class="kpi"><div class="n">${w.posts}</div><div class="l">posts live${delta(w.posts,p&&p.posts,false)}</div></div>`+
+      `<div class="kpi"><div class="n">$${w.spend.toLocaleString()}</div><div class="l">spend${delta(w.spend,p&&p.spend,true)}</div></div>`+
+      `<div class="kpi"><div class="n">${w.topv.toLocaleString()}</div><div class="l">top post: ${w.top}</div></div>`+
+      `<div class="kpi"><div class="n">${w.posted} / ${w.outreach} / ${w.later}</div><div class="l">Posted / Outreach / Later</div></div>`;
+    document.getElementById("wkContext").innerHTML = wi===0 ? CURRENT_CONTEXT :
+      `<p class="note">Top performer <strong>${w.top}</strong> at ${w.topv.toLocaleString()} views. Mix: ${w.posted} Posted · ${w.outreach} Outreach · ${w.later} Later.</p>`;
+    document.getElementById("wkNext").disabled = wi===0;
+    document.getElementById("wkPrev").disabled = wi>=WEEKS.length-1;
+  }
+  document.getElementById("wkPrev").onclick=()=>{ if(wi<WEEKS.length-1){wi++;renderWeek();} };
+  document.getElementById("wkNext").onclick=()=>{ if(wi>0){wi--;renderWeek();} };
+  renderWeek();
+
+  const TOPWEEKS=[
+    {"lo": "6 Jul", "hi": "12 Jul", "top": [{"name": "@shotsbyjastin.raw", "url": "https://www.tiktok.com/@shotsbyjastin.raw/video/7659437558220410130", "views": 3382, "plat": "TikTok"}, {"name": "Nomad Agency", "url": "https://www.tiktok.com/@aigirlssociety/video/7660217596272332045", "views": 1831, "plat": "TikTok"}, {"name": "@ugcrencee", "url": "https://www.tiktok.com/@ugcrencee/video/7659777643419536660", "views": 1383, "plat": "TikTok"}, {"name": "@yourmarketingirlie", "url": "https://www.tiktok.com/@yourmarketingirlie/video/7659400818952539399", "views": 893, "plat": "TikTok"}]},
+    {"lo": "29 Jun", "hi": "5 Jul", "top": [{"name": "@ricthelisouza", "url": "https://www.instagram.com/reel/DaN_71jNEvP/", "views": 7469, "plat": "IG"}, {"name": "@jessx33___", "url": "https://www.instagram.com/reels/DaTTYUEJFUt/", "views": 2156, "plat": "IG"}, {"name": "@yourmarketingirlie", "url": "https://www.tiktok.com/@yourmarketingirlie/video/7656804376027155719", "views": 1332, "plat": "TikTok"}, {"name": "@jessx33___", "url": "https://www.tiktok.com/@jessx33___/video/7658002249704148238", "views": 960, "plat": "TikTok"}]},
+    {"lo": "22 Jun", "hi": "28 Jun", "top": [{"name": "@abetia", "url": "https://www.tiktok.com/@abetia/video/7656528905628585247", "views": 5528, "plat": "TikTok"}, {"name": "@imelaniiie._", "url": "https://www.instagram.com/p/DZ7TKpYzDaK/", "views": 4076, "plat": "IG"}, {"name": "@imelaniiie._", "url": "https://www.tiktok.com/@imelaniiie._/video/7654548173507087624", "views": 3888, "plat": "TikTok"}, {"name": "@madisondantzlerr", "url": "https://www.instagram.com/reel/DZ7iX00h0gD/", "views": 2756, "plat": "IG"}]},
+    {"lo": "15 Jun", "hi": "21 Jun", "top": [{"name": "@etukaugc", "url": "https://www.tiktok.com/@etukaugc/video/7653103743336058119", "views": 18300, "plat": "TikTok"}, {"name": "@imelaniiie._", "url": "https://www.tiktok.com/@imelaniiie._/video/7652756421905337607", "views": 7378, "plat": "TikTok"}, {"name": "@imelaniiie._", "url": "https://www.instagram.com/p/DZu4-3oTaO8/", "views": 4299, "plat": "IG"}, {"name": "Moe Dafalla (@mdafalla.ugc)", "url": "https://www.instagram.com/reel/DZm3GXmSojA/", "views": 4020, "plat": "IG"}]},
+    {"lo": "8 Jun", "hi": "14 Jun", "top": [{"name": "Maverick Maltin", "url": "https://www.instagram.com/p/DZXb7eOP0DS/", "views": 342361, "plat": "IG"}, {"name": "Maverick Maltin", "url": "https://www.youtube.com/shorts/AnzJiDKpfVA", "views": 22747, "plat": "YouTube"}, {"name": "Maverick Maltin", "url": "https://www.tiktok.com/@maverickgpt/video/7649382200873323806", "views": 8537, "plat": "TikTok"}, {"name": "Be Productive", "url": "https://www.youtube.com/watch?v=e7eBaQtls0U", "views": 8416, "plat": "YouTube"}]},
+    {"lo": "1 Jun", "hi": "7 Jun", "top": [{"name": "@xx_kashurr", "url": "https://www.tiktok.com/@xx_kashurr/video/7647948330550496525", "views": 14600, "plat": "TikTok"}, {"name": "@imelaniiie._", "url": "https://www.tiktok.com/@imelaniiie._/video/7646471658324151560", "views": 4758, "plat": "TikTok"}, {"name": "@abetia", "url": "https://www.tiktok.com/@abetia/video/7646475579176357150", "views": 998, "plat": "TikTok"}, {"name": "@usernameislalita", "url": "https://www.tiktok.com/@usernameislalita/video/7646920216227630356", "views": 950, "plat": "TikTok"}]},
+    {"lo": "25 May", "hi": "31 May", "top": [{"name": "@yourmarketingirlie", "url": "https://www.tiktok.com/@yourmarketingirlie/video/7644385102981549320", "views": 2484, "plat": "TikTok"}, {"name": "The Social Agency", "url": "https://www.tiktok.com/@trendtheoryagency/video/7644633831072402719", "views": 1192, "plat": "TikTok"}, {"name": "@clipped_ugc", "url": "https://www.tiktok.com/@clipped_ugc/video/7646043897998707999", "views": 1133, "plat": "TikTok"}, {"name": "@usernameislalita", "url": "https://www.tiktok.com/@usernameislalita/video/7644746201065065749", "views": 843, "plat": "TikTok"}]},
+    {"lo": "18 May", "hi": "24 May", "top": [{"name": "The Social Agency", "url": "https://www.tiktok.com/@trendtheoryagency/video/7642003042941832479", "views": 170800, "plat": "TikTok"}, {"name": "@itsjoan_g", "url": "https://www.tiktok.com/@itsjoan_g/video/7641119130673745172", "views": 15400, "plat": "TikTok"}, {"name": "@imelaniiie._", "url": "https://www.tiktok.com/@imelaniiie._/video/7641318800192802056", "views": 6103, "plat": "TikTok"}, {"name": "@imelaniiie._", "url": "https://www.instagram.com/p/DYffoYrTu3u/", "views": 5394, "plat": "IG"}]}
+  ];
+  function embedSrc(p){
+    if(p.plat==="TikTok"){const m=p.url.match(/video\/(\d+)/);return m?"https://www.tiktok.com/embed/v2/"+m[1]:null;}
+    if(p.plat==="YouTube"){const m=p.url.match(/shorts\/([\w-]+)/)||p.url.match(/[?&]v=([\w-]+)/);return m?"https://www.youtube.com/embed/"+m[1]:null;}
+    if(p.plat==="IG"){const m=p.url.match(/\/(p|reel|reels)\/([\w-]+)/);return m?"https://www.instagram.com/"+(m[1]==="reels"?"reel":m[1])+"/"+m[2]+"/embed":null;}
+    return null;
+  }
+  let ri=0;
+  function renderRW(){
+    const w=TOPWEEKS[ri];
+    document.getElementById("rwLabel").textContent="week of "+w.lo+" to "+w.hi+" 2026";
+    document.getElementById("rwGrid").innerHTML=w.top.map(p=>{
+      const src=embedSrc(p);
+      const embed=src?`<iframe class="rwembed" src="${src}" loading="lazy" allow="encrypted-media;fullscreen" allowfullscreen></iframe>`:"";
+      return `<div class="rwcard">${embed}<div class="rwmeta"><span class="rwbadge">${p.plat}</span><span class="v">${p.views.toLocaleString()}</span><span>${p.name}</span><a href="${p.url}" target="_blank">open ↗</a></div></div>`;
+    }).join("");
+    document.getElementById("rwNext").disabled = ri===0;
+    document.getElementById("rwPrev").disabled = ri>=TOPWEEKS.length-1;
+  }
+  document.getElementById("rwPrev").onclick=()=>{ if(ri<TOPWEEKS.length-1){ri++;renderRW();} };
+  document.getElementById("rwNext").onclick=()=>{ if(ri>0){ri--;renderRW();} };
+  renderRW();
+</script>
+</body>
+</html>
