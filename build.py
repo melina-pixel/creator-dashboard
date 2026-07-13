@@ -202,10 +202,10 @@ def cnt(hs): return sum(1 for r in active if r["health"] in hs)
 gv = cnt(["Healthy", "Volume engine", "Complete"]); bv = cnt(["New"]); av = cnt(["At risk", "Parked"])
 n = len(active); totn = max(n, 1); p = lambda x: round(x / totn * 100)
 acsum = (f'<div class="budget-top"><div><span class="big">{n}</span> <span class="sub">active collaborations</span></div></div>'
-         f'<div class="bar"><div style="width:{p(gv)}%;background:var(--green)"></div><div style="width:{p(bv)}%;background:var(--blue)"></div><div style="width:{p(av)}%;background:var(--amber)"></div></div>'
-         f'<div class="legend"><span><i class="dot" style="background:var(--green)"></i> {gv} live</span>'
-         f'<span><i class="dot" style="background:var(--blue)"></i> {bv} pilots</span>'
-         f'<span><i class="dot" style="background:var(--amber)"></i> {av} awaiting / at risk</span></div>')
+         f'<div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:12px;font-size:14px">'
+         f'<span><i class="dot" style="background:var(--green)"></i> <strong>{gv}</strong> live</span>'
+         f'<span><i class="dot" style="background:var(--blue)"></i> <strong>{bv}</strong> pilots</span>'
+         f'<span><i class="dot" style="background:var(--amber)"></i> <strong>{av}</strong> awaiting / at risk</span></div>')
 html, nac = re.subn(r'<!--ACSUMMARY_START-->.*?<!--ACSUMMARY_END-->', lambda m: '<!--ACSUMMARY_START-->' + acsum + '<!--ACSUMMARY_END-->', html, count=1, flags=re.S)
 if not nac: print("  WARN no match: activeSummary")
 print(f"  active collabs: {len(active)} ({gv} live / {bv} pilots / {av} at risk) | wrapped: {len(wrapped)}")
