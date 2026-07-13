@@ -29,7 +29,7 @@
   .snav a.active svg{opacity:1}
   /* main */
   .main{flex:1;min-width:0;display:flex;flex-direction:column}
-  .topbar{background:var(--card);border-bottom:1px solid var(--line);padding:15px 30px;display:flex;justify-content:space-between;align-items:center;gap:16px;position:sticky;top:0;z-index:10}
+  .topbar{background:var(--card);border-bottom:1px solid var(--line);padding:15px 30px;display:flex;justify-content:flex-end;align-items:center;gap:16px;position:sticky;top:0;z-index:10}
   .topbar h1{margin:0;font-size:17px;font-weight:800;letter-spacing:-.01em}
   .topbar .meta{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--muted)}
   .topbar .meta a{font-weight:600}
@@ -101,7 +101,6 @@
 
   <div class="main">
     <div class="topbar">
-      <h1 id="topTitle">Budget</h1>
       <div class="meta">
         <a href="https://docs.google.com/spreadsheets/d/1Ix2-m-8Jrvv6TWeyLBJQ5IHvp6dEXVW_h_5JpT8kPLA/edit#gid=700414383" target="_blank">Open in Google Sheets ↗</a>
         <span>as of 13 Jul 2026</span>
@@ -273,13 +272,11 @@
 </div>
 
 <script>
-  const TITLES={budget:"Budget",snapshot:"Weekly snapshot",active:"Active collabs",invoices:"Invoices",pipeline:"Pipeline",forecast:"Forecast",highlights:"Recent work"};
   const tabs=[...document.querySelectorAll('.snav a')];
   const panels=[...document.querySelectorAll('.tab-panel')];
   function showTab(id){
     panels.forEach(p=>p.classList.toggle('active',p.id===id));
     tabs.forEach(t=>t.classList.toggle('active',t.dataset.target===id));
-    document.getElementById('topTitle').textContent=TITLES[id]||"";
     window.scrollTo({top:0});
   }
   tabs.forEach(t=>t.addEventListener('click',e=>{e.preventDefault();showTab(t.dataset.target);}));
