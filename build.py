@@ -184,13 +184,13 @@ def linkhtml(rec):
     return "<br>" + " · ".join(f'<a href="{u}" target="_blank">{lbl(u)} ↗</a>' for u in urls)
 def arow(rec):
     sc = pillcls(rec["health"])
-    return (f'<tr><td><strong>{rec["name"]}</strong>{linkhtml(rec)}</td><td>{rec["type"]}</td>'
-            f'<td><span class="pill {sc}">{rec["stage"]}</span></td><td>{rec["cost"]}</td>'
+    return (f'<tr><td><strong>{rec["name"]}</strong>{linkhtml(rec)}</td>'
+            f'<td><span class="pill {sc}">{rec["stage"]}</span></td>'
             f'<td><span class="pill {sc}">{rec["health"]}</span></td></tr>')
 def wrow(rec):
     sc = pillcls(rec["health"])
-    return (f'<tr><td><strong>{rec["name"]}</strong>{linkhtml(rec)}</td><td>{rec["type"]}</td>'
-            f'<td><span class="pill {sc}">{rec["stage"]}</span></td><td>{rec["cost"]}</td></tr>')
+    return (f'<tr><td><strong>{rec["name"]}</strong>{linkhtml(rec)}</td>'
+            f'<td><span class="pill {sc}">{rec["stage"]}</span></td></tr>')
 active_html = "".join(arow(r) for r in active)
 wrapped_html = "".join(wrow(r) for r in wrapped)
 html, na = re.subn(r'(<tbody id="activeRows">).*?(</tbody>)', lambda m: m.group(1) + active_html + m.group(2), html, count=1, flags=re.S)
