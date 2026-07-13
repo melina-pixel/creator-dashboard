@@ -158,6 +158,42 @@ sub(r'<div class="n">\d+</div><div class="l">backlog', f'<div class="n">{backlog
 total_prospects = wv["Wave 1"] + wv["Wave 2"] + wv["Wave 3"] + backlog
 sub(r"Pipeline, \d+ prospects", f"Pipeline, {total_prospects} prospects", "pipeline heading")
 
+# ---- Active / Wrapped collabs from Long-Term Partnerships tab (Dashboard/Stage/Health cols) ----
+lt = sheets.spreadsheets().values().get(spreadsheetId=SHEET_ID, range="'Long-Term Influencer Partnerships'!B8:T60").execute().get("values", [])
+HEALTH_PILL = {"Healthy": "p-green", "Complete": "p-green", "At risk": "p-amber", "Parked": "p-amber",
+               "New": "p-blue", "Volume engine": "p-blue", "Dormant": "p-gray", "Churned": "p-red"}
+def pillcls(h): return HEALTH_PILL.get(h, "p-gray")
+active, wrapped = [], []
+for r in lt:
+    r = r + [""] * 19
+    name, dash, stage, health = r[0].strip(), r[16].strip(), r[17].strip(), r[18].strip()
+    if not name or name == "Influencer Name" or dash not in ("Active", "Wrapped"): continue
+    rec = {"name": name, "type": r[1].strip(), "link": r[5].strip(), "cost": r[9].strip(), "stage": stage, "health": health}
+    (active if dash == "Active" else wrapped).append(rec)
+active.insert(0, {"name": "Posted CPM cohort", "sub": "~20+ UGC creators/wk", "type": "Posted (volume)",
+                  "link": "", "cost": "$20 flat and CPM", "stage": "Live · daily posts", "health": "Volume engine"})
+wrapped.append({"name": "Corporate Bro (Ross)", "type": "Prospect", "link": "", "cost": "$20K quote",
+                "stage": "Parked · $20K too high vs fit", "health": "Parked"})
+def linkhtml(rec):
+    if rec.get("sub"): return f'<br><span class="sub">{rec["sub"]}</span>'
+    return f'<br><a href="{rec["link"]}" target="_blank">open ↗</a>' if rec["link"] else ""
+def arow(rec):
+    sc = pillcls(rec["health"])
+    return (f'<tr><td><strong>{rec["name"]}</strong>{linkhtml(rec)}</td><td>{rec["type"]}</td>'
+            f'<td><span class="pill {sc}">{rec["stage"]}</span></td><td>{rec["cost"]}</td>'
+            f'<td><span class="pill {sc}">{rec["health"]}</span></td></tr>')
+def wrow(rec):
+    sc = pillcls(rec["health"])
+    return (f'<tr><td><strong>{rec["name"]}</strong>{linkhtml(rec)}</td><td>{rec["type"]}</td>'
+            f'<td><span class="pill {sc}">{rec["stage"]}</span></td><td>{rec["cost"]}</td></tr>')
+active_html = "".join(arow(r) for r in active)
+wrapped_html = "".join(wrow(r) for r in wrapped)
+html, na = re.subn(r'(<tbody id="activeRows">).*?(</tbody>)', lambda m: m.group(1) + active_html + m.group(2), html, count=1, flags=re.S)
+html, nw = re.subn(r'(<tbody id="wrappedRows">).*?(</tbody>)', lambda m: m.group(1) + wrapped_html + m.group(2), html, count=1, flags=re.S)
+if not na: print("  WARN no match: activeRows")
+if not nw: print("  WARN no match: wrappedRows")
+print(f"  active collabs: {len(active)} | wrapped: {len(wrapped)}")
+
 open(INDEX, "w", encoding="utf-8").write(html)
 print(f"Rebuilt: week {WEEKS[0]['lo']}-{WEEKS[0]['hi']}, {month_name} spend ${spent_mtd:,}/{MONTHLY_BUDGET}, "
       f"waves {wv['Wave 1']}/{wv['Wave 2']}/{wv['Wave 3']}/{backlog}, all-time ${all_time/1000:.1f}K/{all_posts}")
