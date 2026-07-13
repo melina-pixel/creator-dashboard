@@ -96,6 +96,7 @@
       <a data-target="pipeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Pipeline</a>
       <a data-target="forecast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><polyline points="7 14 11 10 14 13 20 6"/></svg>Forecast</a>
       <a data-target="highlights"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>Recent work</a>
+      <a data-target="discussion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Discussion</a>
     </nav>
     <div style="margin-top:22px;padding:0 11px;font-size:11px;color:var(--muted)">Built by Melina Giorgalletou</div>
   </aside>
@@ -154,13 +155,13 @@
         <div class="card" style="overflow-x:auto">
           <table>
             <thead><tr><th>Creator</th><th>Type</th><th>Stage</th><th>Cost</th><th>Health</th></tr></thead>
-            <tbody id="activeRows"><tr><td><strong>Posted CPM cohort</strong><br><span class="sub">~20+ UGC creators/wk</span></td><td>Posted (volume)</td><td><span class="pill p-blue">Live · daily posts</span></td><td>$20 flat and CPM</td><td><span class="pill p-blue">Volume engine</span></td></tr><tr><td><strong>Marcus Ng</strong></td><td>Outreach</td><td><span class="pill p-amber">Awaiting final video</span></td><td></td><td><span class="pill p-amber">At risk</span></td></tr><tr><td><strong>Kayvon</strong></td><td>Outreach</td><td><span class="pill p-amber">Final video overdue · chased 13 Jul</span></td><td>Paid & organic incl.</td><td><span class="pill p-amber">At risk</span></td></tr><tr><td><strong>NOMAD agency</strong><br><a href="https://nomadmkt.com/" target="_blank">open ↗</a></td><td>Outreach</td><td><span class="pill p-green">Live · posts weekly</span></td><td></td><td><span class="pill p-green">Healthy</span></td></tr><tr><td><strong>Moe (@mdafalla.ugc)</strong><br><a href="https://www.tiktok.com/@mdafalla.ugc" target="_blank">open ↗</a></td><td>Outreach</td><td><span class="pill p-green">In submission · Round 3</span></td><td>Full incl. paid (no whitelisting)</td><td><span class="pill p-green">Healthy</span></td></tr><tr><td><strong>Kayla Malss (Allies Mgmt)</strong></td><td>Outreach</td><td><span class="pill p-blue">Signed · in production</span></td><td>30-day + Spark Ads</td><td><span class="pill p-blue">New</span></td></tr><tr><td><strong>Kyan Salera (@kyman.ai)</strong><br><a href="https://www.tiktok.com/@kyman.ai" target="_blank">open ↗</a></td><td>Outreach</td><td><span class="pill p-blue">In production · draft in</span></td><td>Organic only (pilot)</td><td><span class="pill p-blue">New</span></td></tr></tbody>
+            <tbody id="activeRows"><tr><td><strong>Posted CPM cohort</strong><br><span class="sub">~20+ UGC creators/wk</span></td><td>Posted (volume)</td><td><span class="pill p-blue">Live · daily posts</span></td><td>$20 flat and CPM</td><td><span class="pill p-blue">Volume engine</span></td></tr><tr><td><strong>Marcus Ng</strong></td><td>Outreach</td><td><span class="pill p-amber">Awaiting final video</span></td><td></td><td><span class="pill p-amber">At risk</span></td></tr><tr><td><strong>Kayvon</strong></td><td>Outreach</td><td><span class="pill p-amber">Final video overdue · chased 13 Jul</span></td><td>Paid & organic incl.</td><td><span class="pill p-amber">At risk</span></td></tr><tr><td><strong>NOMAD agency</strong><br><a href="https://www.tiktok.com/@aigirlssociety" target="_blank">TikTok ↗</a> · <a href="https://www.instagram.com/aigirlssociety" target="_blank">Instagram ↗</a></td><td>Outreach</td><td><span class="pill p-green">Live · posts weekly</span></td><td></td><td><span class="pill p-green">Healthy</span></td></tr><tr><td><strong>Moe (@mdafalla.ugc)</strong><br><a href="https://www.tiktok.com/@mdafalla.ugc" target="_blank">TikTok ↗</a></td><td>Outreach</td><td><span class="pill p-green">In submission · Round 3</span></td><td>Full incl. paid (no whitelisting)</td><td><span class="pill p-green">Healthy</span></td></tr><tr><td><strong>Kayla Malss (Allies Mgmt)</strong></td><td>Outreach</td><td><span class="pill p-blue">Signed · in production</span></td><td>30-day + Spark Ads</td><td><span class="pill p-blue">New</span></td></tr><tr><td><strong>Kyan Salera (@kyman.ai)</strong><br><a href="https://www.tiktok.com/@kyman.ai" target="_blank">TikTok ↗</a></td><td>Outreach</td><td><span class="pill p-blue">In production · draft in</span></td><td>Organic only (pilot)</td><td><span class="pill p-blue">New</span></td></tr></tbody>
           </table>
         </div>
         <div class="card">
           <div class="sub" style="margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:11px">Recently wrapped, not active</div>
           <table>
-            <tbody id="wrappedRows"><tr><td><strong>Maverick Maltin</strong></td><td>Outreach</td><td><span class="pill p-gray">Past partner · dormant</span></td><td></td></tr><tr><td><strong>Melanie (@imelaniiie._)</strong><br><a href="https://www.tiktok.com/@imelaniiie._" target="_blank">open ↗</a></td><td>Posted</td><td><span class="pill p-red">Churned · now other tools</span></td><td>Paid (Spark Ads) from day 1</td></tr><tr><td><strong>Lalita (@usernameislalita)</strong><br><a href="https://www.tiktok.com/@usernameislalita" target="_blank">open ↗</a></td><td>Posted</td><td><span class="pill p-red">Churned</span></td><td>Paid (Spark Ads) from day 1</td></tr><tr><td><strong>Amelia (@abetia)</strong><br><a href="https://www.tiktok.com/@abetia" target="_blank">open ↗</a></td><td>Posted</td><td><span class="pill p-green">Delivered</span></td><td>Paid (Spark Ads) from day 1</td></tr><tr><td><strong>Corporate Bro (Ross)</strong></td><td>Prospect</td><td><span class="pill p-amber">Parked · $20K too high vs fit</span></td><td>$20K quote</td></tr></tbody>
+            <tbody id="wrappedRows"><tr><td><strong>Maverick Maltin</strong></td><td>Outreach</td><td><span class="pill p-gray">Past partner · dormant</span></td><td></td></tr><tr><td><strong>Melanie (@imelaniiie._)</strong><br><a href="https://www.tiktok.com/@imelaniiie._" target="_blank">TikTok ↗</a></td><td>Posted</td><td><span class="pill p-red">Churned · now other tools</span></td><td>Paid (Spark Ads) from day 1</td></tr><tr><td><strong>Lalita (@usernameislalita)</strong><br><a href="https://www.tiktok.com/@usernameislalita" target="_blank">TikTok ↗</a></td><td>Posted</td><td><span class="pill p-red">Churned</span></td><td>Paid (Spark Ads) from day 1</td></tr><tr><td><strong>Amelia (@abetia)</strong><br><a href="https://www.tiktok.com/@abetia" target="_blank">TikTok ↗</a></td><td>Posted</td><td><span class="pill p-green">Delivered</span></td><td>Paid (Spark Ads) from day 1</td></tr><tr><td><strong>Corporate Bro (Ross)</strong></td><td>Prospect</td><td><span class="pill p-amber">Parked · $20K too high vs fit</span></td><td>$20K quote</td></tr></tbody>
           </table>
         </div>
       </section>
@@ -248,6 +249,19 @@
             <button id="rwNext" class="wkbtn">Newer ▶</button>
           </div>
           <div id="rwGrid" class="rwgrid" style="margin-top:14px"></div>
+        </div>
+      </section>
+
+      <section id="discussion" class="tab-panel">
+        <h2>Discussion</h2>
+        <div class="card">
+          <div id="cmtList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;max-width:640px">
+            <input id="cmtName" placeholder="Your name" style="padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit">
+            <textarea id="cmtText" placeholder="Leave a comment or question…" rows="3" style="padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit;resize:vertical"></textarea>
+            <button id="cmtPost" class="wkbtn" style="align-self:flex-start;background:var(--accent);color:#fff;border-color:var(--accent)">Post comment</button>
+            <div id="cmtMsg" class="note"></div>
+          </div>
         </div>
       </section>
 
@@ -357,6 +371,32 @@
   document.getElementById("rwPrev").onclick=()=>{ if(ri<TOPWEEKS.length-1){ri++;renderRW();} };
   document.getElementById("rwNext").onclick=()=>{ if(ri>0){ri--;renderRW();} };
   renderRW();
+
+  // ---- Discussion (on-page comments) ----
+  function esc(s){return (s||"").replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));}
+  async function loadComments(){
+    const list=document.getElementById("cmtList");
+    try{
+      const r=await fetch("/api/comments"); const j=await r.json();
+      const c=j.comments||[];
+      if(!c.length){ list.innerHTML='<div class="note">No comments yet — start the discussion below.</div>'; return; }
+      list.innerHTML=c.slice().reverse().map(x=>
+        `<div style="border:1px solid var(--line);border-radius:10px;padding:10px 12px"><div style="font-weight:700;font-size:13px">${esc(x.name)} <span class="sub" style="font-weight:400">· ${new Date(x.ts).toLocaleString()}</span></div><div style="font-size:13.5px;margin-top:3px;white-space:pre-wrap">${esc(x.text)}</div></div>`).join("");
+    }catch(e){ list.innerHTML='<div class="note">Comments are still warming up — try again in a moment.</div>'; }
+  }
+  const cp=document.getElementById("cmtPost");
+  if(cp) cp.onclick=async()=>{
+    const name=document.getElementById("cmtName").value.trim(), text=document.getElementById("cmtText").value.trim();
+    const msg=document.getElementById("cmtMsg");
+    if(!name||!text){ msg.textContent="Add your name and a comment."; return; }
+    msg.textContent="Posting…";
+    try{
+      const r=await fetch("/api/comments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text})});
+      if(!r.ok) throw 0;
+      document.getElementById("cmtText").value=""; msg.textContent="Posted ✓"; loadComments();
+    }catch(e){ msg.textContent="Could not post — try again."; }
+  };
+  loadComments();
 </script>
 </body>
 </html>

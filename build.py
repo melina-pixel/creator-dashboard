@@ -174,7 +174,14 @@ wrapped.append({"name": "Corporate Bro (Ross)", "type": "Prospect", "link": "", 
                 "stage": "Parked · $20K too high vs fit", "health": "Parked"})
 def linkhtml(rec):
     if rec.get("sub"): return f'<br><span class="sub">{rec["sub"]}</span>'
-    return f'<br><a href="{rec["link"]}" target="_blank">open ↗</a>' if rec["link"] else ""
+    urls = [u for u in rec["link"].split() if u.startswith("http")]
+    if not urls: return ""
+    def lbl(u):
+        if "tiktok" in u: return "TikTok"
+        if "instagram" in u: return "Instagram"
+        if "youtu" in u: return "YouTube"
+        return "site"
+    return "<br>" + " · ".join(f'<a href="{u}" target="_blank">{lbl(u)} ↗</a>' for u in urls)
 def arow(rec):
     sc = pillcls(rec["health"])
     return (f'<tr><td><strong>{rec["name"]}</strong>{linkhtml(rec)}</td><td>{rec["type"]}</td>'
