@@ -137,8 +137,8 @@ sub(r'<div class="spent" style="width:\d+%">', f'<div class="spent" style="width
 sub(r'<div class="committed" style="width:\d+%">', f'<div class="committed" style="width:{committed_pct}%">', "bar committed")
 sub(r"Spent to date \$[\d,]+", f"Spent to date ${spent_mtd:,}", "legend spent")
 sub(r"Available ~\$[\d,]+", f"Available ~${available:,}", "legend available")
-sub(r'<div class="n">\$[\d,]+</div><div class="l">spent in \w+ \(to date\)</div>',
-    f'<div class="n">${spent_mtd:,}</div><div class="l">spent in {month_name} (to date)</div>', "kpi spent")
+sub(r'<div class="n">\$[\d,]+</div><div class="l">spent in [^<]*</div>',
+    f'<div class="n">${spent_mtd:,}</div><div class="l">spent in {month_name} · through {latest.strftime("%-d %b")}</div>', "kpi spent")
 sub(r"Recent months:.*?<span class=\"sub\">all-time",
     f'Recent months: {recent} · <span class="sub">all-time', "recent months", flags=re.S)
 sub(r"all-time creator spend \$[\d.]+K across \d+ posts",
