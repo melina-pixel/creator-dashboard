@@ -104,7 +104,7 @@
     <div class="topbar">
       <div class="meta">
         <a href="https://docs.google.com/spreadsheets/d/1Ix2-m-8Jrvv6TWeyLBJQ5IHvp6dEXVW_h_5JpT8kPLA/edit#gid=700414383" target="_blank">Open in Google Sheets ↗</a>
-        <span>as of 16 Aug 2026</span>
+        <span>as of 17 Aug 2026</span>
       </div>
     </div>
 
@@ -130,7 +130,7 @@
         </div>
         <div class="kpis">
           <div class="kpi"><div class="n">7 active</div><div class="l">3 posting · 2 pilots · 2 awaiting final</div></div>
-          <div class="kpi"><div class="n">$0</div><div class="l">spent in August · through 16 Aug</div></div>
+          <div class="kpi"><div class="n">$0</div><div class="l">spent in August · through 17 Aug</div></div>
           <div class="kpi"><div class="n">119</div><div class="l">creators in pipeline</div></div>
           <div class="kpi"><div class="n">11</div><div class="l">invoices last 60 days</div></div>
         </div>
@@ -271,14 +271,14 @@
   showTab('budget');
 
   const WEEKS=[
+    {"lo": "17 Aug", "hi": "23 Aug", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0},
     {"lo": "10 Aug", "hi": "16 Aug", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0},
     {"lo": "3 Aug", "hi": "9 Aug", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0},
     {"lo": "27 Jul", "hi": "2 Aug", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0},
     {"lo": "20 Jul", "hi": "26 Jul", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0},
     {"lo": "13 Jul", "hi": "19 Jul", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0},
     {"lo": "6 Jul", "hi": "12 Jul", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0},
-    {"lo": "29 Jun", "hi": "5 Jul", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0},
-    {"lo": "22 Jun", "hi": "28 Jun", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0}
+    {"lo": "29 Jun", "hi": "5 Jul", "posts": 0, "spend": 0, "top": "", "topv": 0, "posted": 0, "outreach": 0, "later": 0}
   ];
   const CURRENT_CONTEXT=`
     <div class="cols">
@@ -330,14 +330,14 @@
   renderWeek();
 
   const TOPWEEKS=[
+    {"lo": "17 Aug", "hi": "23 Aug", "top": []},
     {"lo": "10 Aug", "hi": "16 Aug", "top": []},
     {"lo": "3 Aug", "hi": "9 Aug", "top": []},
     {"lo": "27 Jul", "hi": "2 Aug", "top": []},
     {"lo": "20 Jul", "hi": "26 Jul", "top": []},
     {"lo": "13 Jul", "hi": "19 Jul", "top": []},
     {"lo": "6 Jul", "hi": "12 Jul", "top": []},
-    {"lo": "29 Jun", "hi": "5 Jul", "top": []},
-    {"lo": "22 Jun", "hi": "28 Jun", "top": []}
+    {"lo": "29 Jun", "hi": "5 Jul", "top": []}
   ];
   function embedSrc(p){
     if(p.plat==="TikTok"){const m=p.url.match(/video\/(\d+)/);return m?"https://www.tiktok.com/embed/v2/"+m[1]:null;}
